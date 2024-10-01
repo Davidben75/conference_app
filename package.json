@@ -5,6 +5,7 @@
     "scripts": {
         "test": "jest",
         "test:e2e": "jest --config jest.config.int.ts",
+        "test:e2e:debug": "jest --config jest.config.int.ts --detectOpenHandles",
         "start": "nodemon src/infrastrcuture/express_api/server.ts"
     },
     "keywords": [],

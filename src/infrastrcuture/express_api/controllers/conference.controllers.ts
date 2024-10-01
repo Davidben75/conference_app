@@ -35,14 +35,14 @@ export const organizeConference = async (
         }
 
         const result = await usecase.execute({
-            user: new User({ id: "Babayaga" }),
+            user: req.user as User,
             title: input.title,
             startDate: new Date(input.startDate),
             endDate: new Date(input.endDate),
             seats: input.seats,
         });
 
-        return res.jsonSucces(result, 200);
+        return res.jsonSucces({ id: result.id }, 201);
     } catch (error) {
         next(error);
     }
