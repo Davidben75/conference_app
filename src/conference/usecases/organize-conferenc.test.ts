@@ -1,8 +1,8 @@
-import { FixedDateGenerator } from "../adapters/fixed-date-generator";
-import { FixedIDGenerator } from "../adapters/fixed-id-generator";
+import { FixedDateGenerator } from "../../core/adapters/fixed-date-generator";
+import { FixedIDGenerator } from "../../core/adapters/fixed-id-generator";
+import { User } from "../../user/entities/user.entity";
 import { InMemoryConferenceRepository } from "../adapters/in-memory-conference-repository";
-import { Conference } from "../entity/conference.entity";
-import { User } from "../entity/user.entity";
+import { Conference } from "../entities/conference.entity";
 import { OrganizeConference } from "./organize-conference";
 
 describe("Feature : Organize conference", () => {
@@ -17,7 +17,11 @@ describe("Feature : Organize conference", () => {
         });
     }
 
-    const JhonWick = new User({ id: "Babayaga" });
+    const JhonWick = new User({
+        id: "Babayaga",
+        emailAddress: "jhondoe@gmail.com",
+        password: "1234",
+    });
 
     let repository: InMemoryConferenceRepository;
     let idGenerator: FixedIDGenerator;

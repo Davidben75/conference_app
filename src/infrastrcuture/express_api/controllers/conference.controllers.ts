@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { CurrentDateGenerator } from "../../../adapters/curent-date-generator";
-import { InMemoryConferenceRepository } from "../../../adapters/in-memory-conference-repository";
-import { RandomIDGenerator } from "../../../adapters/random-id-generator";
-import { OrganizeConference } from "../../../usecases/organize-conference";
-import { User } from "../../../entity/user.entity";
-import { Conference } from "../../../entity/conference.entity";
+import { CurrentDateGenerator } from "../../../core/adapters/curent-date-generator";
+import { InMemoryConferenceRepository } from "../../../conference/adapters/in-memory-conference-repository";
+import { RandomIDGenerator } from "../../../core/adapters/random-id-generator";
+import { OrganizeConference } from "../../../conference/usecases/organize-conference";
+import { User } from "../../../user/entities/user.entity";
+import { Conference } from "../../../conference/entities/conference.entity";
 import { CreateConfererenceInputs } from "../dto/conference.dto";
 import { validatorRequest } from "../utils/validate-request";
 

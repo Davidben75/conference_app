@@ -1,9 +1,9 @@
 import { addDays, addHours } from "date-fns";
 import app from "../infrastrcuture/express_api/app";
 import request from "supertest";
-import { User } from "../entity/user.entity";
-import { InMemoryUserRepository } from "../adapters/in-memory-user-repository";
-import { BasicAuthenticator } from "../services/basic-authenticator";
+import { User } from "../user/entities/user.entity";
+import { InMemoryUserRepository } from "../user/adapters/in-memory-user-repository";
+import { BasicAuthenticator } from "../user/services/basic-authenticator";
 
 describe("Feature : Organize conference", () => {
     const johnDoe = new User({
@@ -30,8 +30,8 @@ describe("Feature : Organize conference", () => {
         ).mockResolvedValue(johnDoe);
 
         const result = await request(app)
-            .post("/conference")
-            .set("Authorization", `Basic ${token}`)
+            .post("/conference") // Make the POST request first
+            .set("Authorization", `Basic ${token}`) // Then set headers
             .send({
                 title: "My first conference",
                 seats: 100,

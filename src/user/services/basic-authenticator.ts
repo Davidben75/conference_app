@@ -1,4 +1,4 @@
-import { User } from "../entity/user.entity";
+import { User } from "../entities/user.entity";
 import { IAuthenticator } from "../ports/authenticator.interface";
 import { IUserRepository } from "../ports/user-repository.interface";
 
