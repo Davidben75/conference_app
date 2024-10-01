@@ -42,7 +42,7 @@ export const organizeConference = async (
             seats: input.seats,
         });
 
-        return res.status(201).json(result);
+        return res.jsonSucces(result, 200);
     } catch (error) {
         next(error);
     }
