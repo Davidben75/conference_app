@@ -10,8 +10,8 @@ export class BasicAuthenticator implements IAuthenticator {
 
         const user = await this.userRepository.findByEmail(emailAddress);
 
-        if (!user) {
-            throw new Error("User not found");
+        if (!user || user.props.password !== password) {
+            throw new Error("Wrong credentials");
         }
 
         return user;
