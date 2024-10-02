@@ -10,7 +10,6 @@ import { e2eUser } from "./seeds/user-seeds";
 
 describe("Feature : Organize conference", () => {
     let testApp: TestApp;
-
     let app: Application;
 
     beforeEach(async () => {
@@ -34,7 +33,6 @@ describe("Feature : Organize conference", () => {
                 endDate: endDate.toISOString(),
             });
 
-        console.log(result);
         expect(result.status).toBe(201);
         expect(result.body.data).toEqual({ id: expect.any(String) });
 

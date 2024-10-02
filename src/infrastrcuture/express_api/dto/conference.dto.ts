@@ -26,3 +26,9 @@ export class CreateConfererenceInputs {
     @IsNotEmpty()
     endDate: Date;
 }
+
+export class ChangeSeatsInputs {
+    @IsNumber()
+    @IsNotEmpty()
+    seats: number;
+}

@@ -17,9 +17,12 @@ export class ChangeSeats {
         seats,
     }: RequestChangeSeats): Promise<ResponseChangeSeats> {
         const conference = await this.repository.findById(conferenceId);
-        if (!conference) throw new Error("Conference not found");
-        if (conference.props.organizerId !== user.props.id)
+        if (!conference) {
+            throw new Error("Conference not found");
+        }
+        if (conference.props.organizerId !== user.props.id) {
             throw new Error("You're not allowed to change this conference");
+        }
         conference.update({ seats });
 
         if (conference.hasToManySeats() || conference.hasNotEnoughSeats())
