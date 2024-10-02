@@ -5,6 +5,13 @@ import { ChangeSeats } from "./changs-seats";
 import { InMemoryConferenceRepository } from "../adapters/in-memory-conference-repository";
 
 describe("Feature : Change seats", () => {
+    async function expectSeatsUnchanged() {
+        const fetchedCOnference = await repository.findById(
+            conference.props.id
+        );
+        expect(fetchedCOnference?.props.seats).toEqual(50);
+    }
+
     const jhondoe = new User({
         id: "jhondoe",
         emailAddress: "jhonedoe@gmail.com",
@@ -60,6 +67,8 @@ describe("Feature : Change seats", () => {
                     seats: 100,
                 })
             ).rejects.toThrow("Conference not found");
+
+            await expectSeatsUnchanged();
         });
     });
 
@@ -72,6 +81,40 @@ describe("Feature : Change seats", () => {
                     seats: 100,
                 })
             ).rejects.toThrow("You're not allowed to change this conference");
+
+            await expectSeatsUnchanged();
+        });
+    });
+
+    describe("Scenario : Number of seats >= 1000", () => {
+        it("Should throw an error", async () => {
+            await expect(
+                useCase.execute({
+                    user: jhondoe,
+                    conferenceId: conference.props.id,
+                    seats: 1001,
+                })
+            ).rejects.toThrow(
+                "The conference must have max 1000 seats an min 20"
+            );
+
+            await expectSeatsUnchanged();
+        });
+    });
+
+    describe("Scenario : Number of seats <= 20", () => {
+        it("Should throw an error", async () => {
+            await expect(
+                useCase.execute({
+                    user: jhondoe,
+                    conferenceId: conference.props.id,
+                    seats: 15,
+                })
+            ).rejects.toThrow(
+                "The conference must have max 1000 seats an min 20"
+            );
+
+            await expectSeatsUnchanged();
         });
     });
 });
