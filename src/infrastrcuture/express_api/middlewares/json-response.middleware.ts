@@ -26,17 +26,19 @@ export function jsonResponseMiddleware(
             success: true,
             data,
         };
+        res.status(satusCode).json(response);
     };
 
-    res.jsonError = (errror: any, satusCode: number) => {
+    res.jsonError = (errror: any, statusCode: number) => {
         const response: ApiResponse = {
             data: null,
             success: false,
             error: {
                 message: errror,
-                code: satusCode,
+                code: statusCode,
             },
         };
+        res.status(statusCode).json(response);
     };
 
     next();

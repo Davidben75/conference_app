@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { extractToken } from "../utils/extract-token";
 import { InMemoryUserRepository } from "../../../user/adapters/in-memory-user-repository";
 import { BasicAuthenticator } from "../../../user/services/basic-authenticator";
-
-const userRepository = new InMemoryUserRepository();
-const authenticator = new BasicAuthenticator(userRepository);
+import conatiner from "../config/dependency-injection";
 
 declare module "express-serve-static-core" {
     interface Request {
@@ -24,8 +22,10 @@ export const isAuthenticated = async (
         const token = extractToken(credentials);
         if (!token) return res.jsonError("Unauthorized", 403);
 
-        const user = await authenticator.authenticate(token);
-
+        const user = await conatiner
+            .resolve("authenticator")
+            .authenticate(token);
+        console.log(user);
         req.user = user;
         next();
     } catch (error) {

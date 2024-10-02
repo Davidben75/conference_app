@@ -4,6 +4,7 @@ import request from "supertest";
 import { User } from "../user/entities/user.entity";
 import { InMemoryUserRepository } from "../user/adapters/in-memory-user-repository";
 import { BasicAuthenticator } from "../user/services/basic-authenticator";
+import container from "../infrastrcuture/express_api/config/dependency-injection";
 
 describe("Feature : Organize conference", () => {
     const johnDoe = new User({
@@ -15,7 +16,7 @@ describe("Feature : Organize conference", () => {
     let repository: InMemoryUserRepository;
 
     beforeEach(async () => {
-        repository = new InMemoryUserRepository();
+        repository = container.resolve("userRepository");
         await repository.create(johnDoe);
     });
 
@@ -24,14 +25,14 @@ describe("Feature : Organize conference", () => {
             `${johnDoe.props.emailAddress}:${johnDoe.props.password}`
         ).toString("base64");
 
-        jest.spyOn(
-            BasicAuthenticator.prototype,
-            "authenticate"
-        ).mockResolvedValue(johnDoe);
+        // jest.spyOn(
+        //     BasicAuthenticator.prototype,
+        //     "authenticate"
+        // ).mockResolvedValue(johnDoe);
 
         const result = await request(app)
-            .post("/conference") // Make the POST request first
-            .set("Authorization", `Basic ${token}`) // Then set headers
+            .post("/conference")
+            .set("Authorization", `Basic ${token}`)
             .send({
                 title: "My first conference",
                 seats: 100,
@@ -39,7 +40,8 @@ describe("Feature : Organize conference", () => {
                 endDate: addDays(addHours(new Date(), 2), 4).toISOString(),
             });
 
+        console.log(result);
         expect(result.status).toBe(201);
-        expect(result.body).toEqual({ id: expect.any(String) });
+        expect(result.body.data).toEqual({ id: expect.any(String) });
     });
 });
