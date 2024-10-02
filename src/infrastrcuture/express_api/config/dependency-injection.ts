@@ -6,36 +6,33 @@ import { InMemoryUserRepository } from "../../../user/adapters/in-memory-user-re
 import { OrganizeConference } from "../../../conference/usecases/organize-conference";
 import { BasicAuthenticator } from "../../../user/services/basic-authenticator";
 import { User } from "../../../user/entities/user.entity";
+import { ChangeSeats } from "../../../conference/usecases/changs-seats";
+import { IConferenceRepository } from "../../../conference/ports/conference-repositiry.interface";
+import { IIDGenerator } from "../../../core/ports/id-generator.interface";
+import { IDateGenerator } from "../../../core/ports/date-generator.interface";
+import { IUserRepository } from "../../../user/ports/user-repository.interface";
 
 const container = createContainer();
 
 container.register({
-    conferenceRespository: asClass(InMemoryConferenceRepository).singleton(),
+    conferenceRepository: asClass(InMemoryConferenceRepository).singleton(),
     idGenerator: asClass(RandomIDGenerator).singleton(),
     dateGenerator: asClass(CurrentDateGenerator).singleton(),
     userRepository: asClass(InMemoryUserRepository).singleton(),
 });
 
-const conferenceRespository = container.resolve("conferenceRespository");
-const idGenerator = container.resolve("idGenerator");
-const dateGenerator = container.resolve("dateGenerator");
-const userRepository = container.resolve("userRepository");
-userRepository.create(
-    new User({
-        id: "jhondoe",
-        emailAddress: "johndoe@gmail.com",
-        password: "azerty",
-    })
-);
+const conferenceRepository = container.resolve(
+    "conferenceRepository"
+) as IConferenceRepository;
+const idGenerator = container.resolve("idGenerator") as IIDGenerator;
+const dateGenerator = container.resolve("dateGenerator") as IDateGenerator;
+const userRepository = container.resolve("userRepository") as IUserRepository;
 
 container.register({
     organizeConferenceUsecase: asValue(
-        new OrganizeConference(
-            conferenceRespository,
-            idGenerator,
-            dateGenerator
-        )
+        new OrganizeConference(conferenceRepository, idGenerator, dateGenerator)
     ),
+    changesSeats: asValue(new ChangeSeats(conferenceRepository)),
     authenticator: asValue(new BasicAuthenticator(userRepository)),
 });
 

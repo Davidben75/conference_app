@@ -1,47 +1,58 @@
 import { addDays, addHours } from "date-fns";
-import app from "../infrastrcuture/express_api/app";
 import request from "supertest";
 import { User } from "../user/entities/user.entity";
 import { InMemoryUserRepository } from "../user/adapters/in-memory-user-repository";
-import { BasicAuthenticator } from "../user/services/basic-authenticator";
 import container from "../infrastrcuture/express_api/config/dependency-injection";
+import { IConferenceRepository } from "../conference/ports/conference-repositiry.interface";
+import { TestApp } from "./utils/test-app";
+import { Application } from "express";
+import { e2eUser } from "./seeds/user-seeds";
 
 describe("Feature : Organize conference", () => {
-    const johnDoe = new User({
-        id: "jhondoe",
-        emailAddress: "johndoe@gmail.com",
-        password: "azerty",
-    });
+    let testApp: TestApp;
 
-    let repository: InMemoryUserRepository;
+    let app: Application;
 
     beforeEach(async () => {
-        repository = container.resolve("userRepository");
-        await repository.create(johnDoe);
+        testApp = new TestApp();
+        await testApp.setup();
+        await testApp.loadAllFixtures([e2eUser.johnDoe]);
+        app = testApp.expressApp;
     });
 
     it("Should organize a conference", async () => {
-        const token = Buffer.from(
-            `${johnDoe.props.emailAddress}:${johnDoe.props.password}`
-        ).toString("base64");
-
-        // jest.spyOn(
-        //     BasicAuthenticator.prototype,
-        //     "authenticate"
-        // ).mockResolvedValue(johnDoe);
+        const startDate = addDays(new Date(), 4);
+        const endDate = addDays(addHours(new Date(), 2), 4);
 
         const result = await request(app)
             .post("/conference")
-            .set("Authorization", `Basic ${token}`)
+            .set("Authorization", e2eUser.johnDoe.createAuthorizationToken())
             .send({
                 title: "My first conference",
                 seats: 100,
-                startDate: addDays(new Date(), 4).toISOString(),
-                endDate: addDays(addHours(new Date(), 2), 4).toISOString(),
+                startDate: startDate.toISOString(),
+                endDate: endDate.toISOString(),
             });
 
         console.log(result);
         expect(result.status).toBe(201);
         expect(result.body.data).toEqual({ id: expect.any(String) });
+
+        const conferenceRepository = container.resolve(
+            "conferenceRepository"
+        ) as IConferenceRepository;
+        const fetchedConference = await conferenceRepository.findById(
+            result.body.data.id
+        );
+
+        expect(fetchedConference).toBeDefined();
+        expect(fetchedConference?.props).toEqual({
+            id: result.body.data.id,
+            title: "My first conference",
+            seats: 100,
+            organizerId: e2eUser.johnDoe.entity.props.id,
+            startDate: startDate,
+            endDate: endDate,
+        });
     });
 });
