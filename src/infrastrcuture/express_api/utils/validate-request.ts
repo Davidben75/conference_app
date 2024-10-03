@@ -15,7 +15,6 @@ export const validatorRequest = async <T>(
     body: any
 ): Promise<{ errors: boolean | string; input: T }> => {
     const input = plainToClass(type, body);
-    console.log(input);
     const errors = await validationError(input);
 
     if (errors) {

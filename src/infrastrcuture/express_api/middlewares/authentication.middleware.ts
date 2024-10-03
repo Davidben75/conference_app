@@ -25,7 +25,7 @@ export const isAuthenticated = async (
         const user = await conatiner
             .resolve("authenticator")
             .authenticate(token);
-        console.log(user);
+
         req.user = user;
         next();
     } catch (error) {

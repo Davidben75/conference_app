@@ -19,6 +19,10 @@ describe("Feature : Organize conference", () => {
         app = testApp.expressApp;
     });
 
+    afterAll(async () => {
+        await testApp.teardDown();
+    });
+
     it("Should organize a conference", async () => {
         const startDate = addDays(new Date(), 4);
         const endDate = addDays(addHours(new Date(), 2), 4);
