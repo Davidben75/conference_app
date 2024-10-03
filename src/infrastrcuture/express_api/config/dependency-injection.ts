@@ -12,6 +12,7 @@ import { IIDGenerator } from "../../../core/ports/id-generator.interface";
 import { IDateGenerator } from "../../../core/ports/date-generator.interface";
 import { IUserRepository } from "../../../user/ports/user-repository.interface";
 import { MongoUserRepository } from "../../../user/adapters/mongo/mongo-user-repository";
+import { MongoUser } from "../../../user/adapters/mongo/mongo-user";
 
 const container = createContainer();
 
@@ -19,7 +20,7 @@ container.register({
     conferenceRepository: asClass(InMemoryConferenceRepository).singleton(),
     idGenerator: asClass(RandomIDGenerator).singleton(),
     dateGenerator: asClass(CurrentDateGenerator).singleton(),
-    userRepository: asClass(MongoUserRepository).singleton(),
+    userRepository: asValue(new MongoUserRepository(MongoUser.UserModel)),
 });
 
 const conferenceRepository = container.resolve(

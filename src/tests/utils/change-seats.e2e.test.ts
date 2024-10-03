@@ -20,7 +20,7 @@ describe("Feature : Change number of seats", () => {
         app = testApp.expressApp;
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
         await testApp.teardDown();
     });
 
