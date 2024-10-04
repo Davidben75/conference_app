@@ -4,4 +4,7 @@ type BookingProps = {
     conferenceId: string;
 };
 
-export class Booking extends Entity<BookingProps> {}
+export class Booking extends Entity<BookingProps> {
+    public initialState: BookingProps;
+    public props: BookingProps;
+}
