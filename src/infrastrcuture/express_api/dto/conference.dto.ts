@@ -44,4 +44,10 @@ export class ChangeDatesInputs {
     endDate: Date;
 }
 
+export class BookSeatInputs {
+    @IsString()
+    @IsNotEmpty()
+    userId: string;
+}
+
 // user, conferenceId, startDate, endDate }: { user: any; conferenceId: any; startDate: any; endDate: any;

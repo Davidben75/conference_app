@@ -67,7 +67,7 @@ describe("MongoUserRepository", () => {
                 seats: testConferences.conference2.props.seats,
                 startDate: testConferences.conference2.props.startDate,
                 endDate: testConferences.conference2.props.endDate,
-                __v: 1,
+                __v: 0,
             });
         });
     });
@@ -93,7 +93,7 @@ describe("MongoUserRepository", () => {
                 seats: 69,
                 startDate: testConferences.conference1.props.startDate,
                 endDate: testConferences.conference1.props.endDate,
-                __v: 1,
+                __v: 0,
             });
         });
     });

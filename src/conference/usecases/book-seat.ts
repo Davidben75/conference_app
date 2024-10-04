@@ -43,10 +43,10 @@ export class BookASeat
             throw new DomainException("You have already booked this seat");
 
         await this.bookingRepostory.create(booking);
-        await this.SendMailToUser(booking);
+        await this.sendMailToUser(booking);
     }
 
-    async SendMailToUser(booking: Booking) {
+    async sendMailToUser(booking: Booking) {
         const user = await this.userRepository.findById(booking.props.userId);
         const conference = await this.conferencRepository.findById(
             booking.props.conferenceId

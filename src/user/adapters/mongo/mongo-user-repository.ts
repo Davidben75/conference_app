@@ -2,7 +2,6 @@ import { Model } from "mongoose";
 import { User } from "../../entities/user.entity";
 import { IUserRepository } from "../../ports/user-repository.interface";
 import { MongoUser } from "./mongo-user";
-import { AwilixError } from "awilix";
 
 class UserMapper {
     toCore(model: MongoUser.UserDocument): User {
@@ -41,7 +40,7 @@ export class MongoUserRepository implements IUserRepository {
     }
 
     async findById(id: string): Promise<User | null> {
-        const user = await this.model.findById({ _id: id });
+        const user = await this.model.findOne({ _id: id });
         if (!user) return null;
 
         return this.mapper.toCore(user);

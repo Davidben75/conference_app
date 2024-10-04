@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../../../user/entities/user.entity";
 import {
+    BookSeatInputs,
     ChangeDatesInputs,
     ChangeSeatsInputs,
     CreateConfererenceInputs,
@@ -11,6 +12,8 @@ import { Conference } from "../../../conference/entities/conference.entity";
 import { IConferenceRepository } from "../../../conference/ports/conference-repositiry.interface";
 import { ChangeSeats } from "../../../conference/usecases/changs-seats";
 import { ChangeDates } from "../../../conference/usecases/change-dates";
+import { IBookingRepository } from "../../../conference/ports/booking-repository.interface";
+import { BookASeat } from "../../../conference/usecases/book-seat";
 
 export const organizeConference = (container: AwilixContainer) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -99,6 +102,30 @@ export const changeConferenceDates = (container: AwilixContainer) => {
                 { message: "The dates was changes corectly", id: id },
                 200
             );
+        } catch (error) {
+            next(error);
+        }
+    };
+};
+
+export const bookAseatForConference = (container: AwilixContainer) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params;
+            const userId = req.user.id;
+
+            const { errors, input } = await validatorRequest(BookSeatInputs, {
+                userId,
+            });
+
+            const result = (
+                (await container.resolve("bookASeat")) as BookASeat
+            ).execute({
+                userId: req.user.id,
+                conferenceId: id,
+            });
+
+            return res.jsonSucces({ message: "You book a seat" }, 201);
         } catch (error) {
             next(error);
         }

@@ -18,9 +18,9 @@ import { InMemoryBookingRepository } from "../../../conference/adapters/in-memor
 import { IBookingRepository } from "../../../conference/ports/booking-repository.interface";
 import { InMemoryMailer } from "../../../core/adapters/in-memory-mailer";
 import { Imailer } from "../../../core/ports/mailer.interface";
-import { Mongoose } from "mongoose";
 import { MongoConferenceRepository } from "../../../conference/adapters/mongo/mongo-conference-repository";
 import { MongoConference } from "../../../conference/adapters/mongo/mongo-conference";
+import { BookASeat } from "../../../conference/usecases/book-seat";
 
 const container = createContainer();
 
@@ -59,6 +59,14 @@ container.register({
             bookingRepository,
             mailer,
             userRepository
+        )
+    ),
+    bookASeat: asValue(
+        new BookASeat(
+            conferenceRepository,
+            userRepository,
+            bookingRepository,
+            mailer
         )
     ),
 });
