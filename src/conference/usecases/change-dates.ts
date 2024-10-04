@@ -63,8 +63,6 @@ export class ChangeDates
                 .filter((user) => user !== null)
         )) as User[];
 
-        console.log(users);
-
         await Promise.all(
             users.map((user) => {
                 this.mailer.send({

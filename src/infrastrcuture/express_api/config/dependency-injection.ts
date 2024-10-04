@@ -13,6 +13,12 @@ import { IDateGenerator } from "../../../core/ports/date-generator.interface";
 import { IUserRepository } from "../../../user/ports/user-repository.interface";
 import { MongoUserRepository } from "../../../user/adapters/mongo/mongo-user-repository";
 import { MongoUser } from "../../../user/adapters/mongo/mongo-user";
+import { ChangeDates } from "../../../conference/usecases/change-dates";
+import { InMemoryBookingRepository } from "../../../conference/adapters/in-memory-booking-repository";
+import { IBookingRepository } from "../../../conference/ports/booking-repository.interface";
+import { InMemoryMailer } from "../../../core/adapters/in-memory-mailer";
+import { Imailer } from "../../../core/ports/mailer.interface";
+import { Mongoose } from "mongoose";
 
 const container = createContainer();
 
@@ -21,6 +27,8 @@ container.register({
     idGenerator: asClass(RandomIDGenerator).singleton(),
     dateGenerator: asClass(CurrentDateGenerator).singleton(),
     userRepository: asValue(new MongoUserRepository(MongoUser.UserModel)),
+    bookingRepository: asClass(InMemoryBookingRepository).singleton(),
+    mailerRepository: asClass(InMemoryMailer).singleton(),
 });
 
 const conferenceRepository = container.resolve(
@@ -29,6 +37,10 @@ const conferenceRepository = container.resolve(
 const idGenerator = container.resolve("idGenerator") as IIDGenerator;
 const dateGenerator = container.resolve("dateGenerator") as IDateGenerator;
 const userRepository = container.resolve("userRepository") as IUserRepository;
+const bookingRepository = container.resolve(
+    "bookingRepository"
+) as IBookingRepository;
+const mailer = container.resolve("mailerRepository") as Imailer;
 
 container.register({
     organizeConferenceUsecase: asValue(
@@ -36,6 +48,15 @@ container.register({
     ),
     changesSeats: asValue(new ChangeSeats(conferenceRepository)),
     authenticator: asValue(new BasicAuthenticator(userRepository)),
+    changeDates: asValue(
+        new ChangeDates(
+            conferenceRepository,
+            dateGenerator,
+            bookingRepository,
+            mailer,
+            userRepository
+        )
+    ),
 });
 
 export default container;

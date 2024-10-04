@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../../../user/entities/user.entity";
 import {
+    ChangeDatesInputs,
     ChangeSeatsInputs,
     CreateConfererenceInputs,
 } from "../dto/conference.dto";
@@ -9,6 +10,7 @@ import { AwilixContainer } from "awilix";
 import { Conference } from "../../../conference/entities/conference.entity";
 import { IConferenceRepository } from "../../../conference/ports/conference-repositiry.interface";
 import { ChangeSeats } from "../../../conference/usecases/changs-seats";
+import { ChangeDates } from "../../../conference/usecases/change-dates";
 
 export const organizeConference = (container: AwilixContainer) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -56,13 +58,45 @@ export const changeSeats = (container: AwilixContainer) => {
             const result = await (
                 container.resolve("changesSeats") as ChangeSeats
             ).execute({
-                user: req.user,
+                user: req.user as User,
                 conferenceId: id,
                 seats: input.seats,
             });
 
             return res.jsonSucces(
                 { message: "The number of seats was changed corectly" },
+                200
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+};
+
+export const changeConferenceDates = (container: AwilixContainer) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params;
+            const body = req.body;
+
+            const { errors, input } = await validatorRequest(
+                ChangeDatesInputs,
+                body
+            );
+
+            if (errors) return res.jsonError(errors, 400);
+
+            const result = await (
+                container.resolve("changeDates") as ChangeDates
+            ).execute({
+                user: req.user as User,
+                conferenceId: id,
+                startDate: new Date(input.startDate),
+                endDate: new Date(input.endDate),
+            });
+
+            return res.jsonSucces(
+                { message: "The dates was changes corectly", id: id },
                 200
             );
         } catch (error) {

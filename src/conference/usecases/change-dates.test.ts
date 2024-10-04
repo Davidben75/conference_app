@@ -7,7 +7,7 @@ import { FixedDateGenerator } from "../../core/adapters/fixed-date-generator";
 import { InMemoryBookingRepository } from "../adapters/in-memory-booking-repository";
 import { InMemoryMailer } from "../../core/adapters/in-memory-mailer";
 import { InMemoryUserRepository } from "../../user/adapters/in-memory-user-repository";
-import { testBooking } from "../../tests/seeds/booking-seeds";
+import { testBooking } from "../tests/booking-seeds";
 
 describe("Feature change dates of conferrence", () => {
     async function datesRemainUnchanged() {

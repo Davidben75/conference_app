@@ -1,10 +1,10 @@
 import { Application } from "express";
-import { TestApp } from "./test-app";
+import { TestApp } from "./utils/test-app";
+import { e2eConferences } from "./seeds/conference-seeds";
+import { e2eUser } from "./seeds/user-seeds";
+import container from "../infrastrcuture/express_api/config/dependency-injection";
+import { IConferenceRepository } from "../conference/ports/conference-repositiry.interface";
 import request from "supertest";
-import { e2eUser } from "../seeds/user-seeds";
-import { e2eConferences } from "../seeds/conference-seeds";
-import container from "../../infrastrcuture/express_api/config/dependency-injection";
-import { IConferenceRepository } from "../../conference/ports/conference-repositiry.interface";
 
 describe("Feature : Change number of seats", () => {
     let testApp: TestApp;

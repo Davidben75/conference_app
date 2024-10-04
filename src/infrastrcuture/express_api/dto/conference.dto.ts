@@ -7,6 +7,7 @@ import {
     Min,
     MIN,
 } from "class-validator";
+import { User } from "../../../user/entities/user.entity";
 
 export class CreateConfererenceInputs {
     @IsString()
@@ -32,3 +33,15 @@ export class ChangeSeatsInputs {
     @IsNotEmpty()
     seats: number;
 }
+
+export class ChangeDatesInputs {
+    @IsDateString()
+    @IsNotEmpty()
+    startDate: Date;
+
+    @IsDateString()
+    @IsNotEmpty()
+    endDate: Date;
+}
+
+// user, conferenceId, startDate, endDate }: { user: any; conferenceId: any; startDate: any; endDate: any;

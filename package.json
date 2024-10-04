@@ -4,6 +4,7 @@
     "main": "index.js",
     "scripts": {
         "test": "jest",
+        "test:debug": "jest --detectOpenHandles",
         "test:e2e": "jest --config jest.config.e2e.ts",
         "test:int": "jest --config jest.config.int.ts",
         "test:e2e:debug": "jest --config jest.config.int.ts --detectOpenHandles",
