@@ -58,7 +58,7 @@ describe("Feature : Change seats", () => {
                     conferenceId: testConferences.conference1.props.id,
                     seats: 100,
                 })
-            ).rejects.toThrow("You're not allowed to change this conference");
+            ).rejects.toThrow("You're not allowed to update this conference");
 
             await expectSeatsUnchanged();
         });

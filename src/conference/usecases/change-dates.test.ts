@@ -118,7 +118,7 @@ describe("Feature change dates of conferrence", () => {
 
         it("Should throw an error", async () => {
             await expect(useCase.execute(payload)).rejects.toThrow(
-                "You're not allowed to change this conference"
+                "You're not allowed to update this conference"
             );
 
             await datesRemainUnchanged();

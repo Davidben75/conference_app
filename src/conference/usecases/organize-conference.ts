@@ -5,6 +5,7 @@ import { IDateGenerator } from "../../core/ports/date-generator.interface";
 import { User } from "../../user/entities/user.entity";
 import { Conference } from "../entities/conference.entity";
 import { Executable } from "../../core/executable.interface";
+import { DomainException } from "../../core/exceptions/domain-exception";
 
 type OrganizeRequest = {
     user: User;
@@ -39,21 +40,23 @@ export class OrganizeConference
         });
 
         if (newConference.isTooClose(this.dateGenerator.now())) {
-            throw new Error(
+            throw new DomainException(
                 "Conference must take place at least 3 days in advance"
             );
         }
 
         if (newConference.hasToManySeats()) {
-            throw new Error("Conference can't have more than 1000 seats");
+            throw new DomainException(
+                "Conference can't have more than 1000 seats"
+            );
         }
 
         if (newConference.hasNotEnoughSeats()) {
-            throw new Error("Conference must have at least 20 seats");
+            throw new DomainException("Conference must have at least 20 seats");
         }
 
         if (newConference.isTooLong()) {
-            throw new Error("Conference can't exceed 3h");
+            throw new DomainException("Conference can't exceed 3h");
         }
 
         await this.repository.create(newConference);

@@ -1,5 +1,7 @@
 import { Executable } from "../../core/executable.interface";
 import { User } from "../../user/entities/user.entity";
+import { ConferenceNotFoundException } from "../exceptions/conference-not-found";
+import { ConferenceUpdateForbiddenException } from "../exceptions/conference-update-forbidden";
 import { IConferenceRepository } from "../ports/conference-repositiry.interface";
 
 type RequestChangeSeats = {
@@ -17,10 +19,10 @@ export class ChangeSeats
     async execute({ user, conferenceId, seats }) {
         const conference = await this.repository.findById(conferenceId);
         if (!conference) {
-            throw new Error("Conference not found");
+            throw new ConferenceNotFoundException();
         }
         if (conference.props.organizerId !== user.props.id) {
-            throw new Error("You're not allowed to change this conference");
+            throw new ConferenceUpdateForbiddenException();
         }
         conference.update({ seats });
 

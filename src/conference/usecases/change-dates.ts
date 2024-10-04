@@ -10,6 +10,8 @@ import { testUsers } from "../../user/tests/user-seeds";
 import { testConferences } from "../tests/conference-seeds";
 import { IUserRepository } from "../../user/ports/user-repository.interface";
 import { Conference } from "../entities/conference.entity";
+import { ConferenceNotFoundException } from "../exceptions/conference-not-found";
+import { ConferenceUpdateForbiddenException } from "../exceptions/conference-update-forbidden";
 
 type RequestChangeDates = {
     user: User;
@@ -33,10 +35,10 @@ export class ChangeDates
     async execute({ user, conferenceId, startDate, endDate }) {
         const conference = await this.repository.findById(conferenceId);
 
-        if (!conference) throw new Error("Conference not found");
+        if (!conference) throw new ConferenceNotFoundException();
 
         if (conference.props.organizerId !== user.props.id)
-            throw new Error("You're not allowed to change this conference");
+            throw new ConferenceUpdateForbiddenException();
 
         conference?.update({ startDate, endDate });
 
