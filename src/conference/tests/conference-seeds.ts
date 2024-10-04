@@ -10,4 +10,12 @@ export const testConferences = {
         startDate: addDays(new Date(), 4),
         endDate: addDays(addHours(new Date(), 2), 4),
     }),
+    conference2: new Conference({
+        id: "id-2",
+        organizerId: "bob",
+        title: "Conference about Sponge",
+        seats: 1000,
+        startDate: addDays(new Date(), 8),
+        endDate: addDays(addHours(new Date(), 2), 8),
+    }),
 };

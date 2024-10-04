@@ -19,11 +19,15 @@ import { IBookingRepository } from "../../../conference/ports/booking-repository
 import { InMemoryMailer } from "../../../core/adapters/in-memory-mailer";
 import { Imailer } from "../../../core/ports/mailer.interface";
 import { Mongoose } from "mongoose";
+import { MongoConferenceRepository } from "../../../conference/adapters/mongo/mongo-conference-repository";
+import { MongoConference } from "../../../conference/adapters/mongo/mongo-conference";
 
 const container = createContainer();
 
 container.register({
-    conferenceRepository: asClass(InMemoryConferenceRepository).singleton(),
+    conferenceRepository: asValue(
+        new MongoConferenceRepository(MongoConference.ConferenceModel)
+    ),
     idGenerator: asClass(RandomIDGenerator).singleton(),
     dateGenerator: asClass(CurrentDateGenerator).singleton(),
     userRepository: asValue(new MongoUserRepository(MongoUser.UserModel)),
